@@ -1,0 +1,12 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Searching for products by availability
+    Given there are products that are available
+    And there are products that are unavailable
+    When I request to list all available products
+    Then the response status code should be 200
+    And the response should contain only available products
+    And the list should include the product with name "Laptop"
+    And the list should include the product with name "Smartphone"
+    And the list should not include the product with name "T-Shirt"
