@@ -1,0 +1,30 @@
+# tests/test_models.py
+from django.test import TestCase
+from myapp.models import Product, Category  # Replace `myapp` with your actual app name
+from .factories import ProductFactory, CategoryFactory
+
+class ProductModelTest(TestCase):
+    def setUp(self):
+        # Set up a category instance
+        self.category = CategoryFactory(name="Electronics")
+        
+        # Set up multiple products with the same category
+        self.product1 = ProductFactory(name="Laptop", category=self.category)
+        self.product2 = ProductFactory(name="Smartphone", category=self.category)
+        
+        # Set up a product with a different category
+        self.other_category = CategoryFactory(name="Clothing")
+        self.product3 = ProductFactory(name="T-Shirt", category=self.other_category)
+
+    def test_find_products_by_category(self):
+        # Retrieve all products in the "Electronics" category
+        products_in_category = Product.objects.filter(category__name="Electronics")
+
+        # Verify that only the products in the "Electronics" category are retrieved
+        self.assertEqual(products_in_category.count(), 2)
+        
+        # Verify that the retrieved products are the expected ones
+        product_names = [product.name for product in products_in_category]
+        self.assertIn("Laptop", product_names)
+        self.assertIn("Smartphone", product_names)
+        self.assertNotIn("T-Shirt", product_names)
