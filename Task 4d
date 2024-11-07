@@ -1,0 +1,62 @@
+# service/routes.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from myapp.models import Product, Category  # Replace `myapp` with your actual app name
+from myapp.serializers import ProductSerializer  # Ensure you have a serializer for Product
+
+@api_view(['GET'])
+def list_all_products(request):
+    """
+    List all products.
+    """
+    products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def list_products_by_name(request):
+    """
+    List products filtered by name.
+    """
+    name = request.query_params.get('name', None)
+    if name:
+        products = Product.objects.filter(name__icontains=name)
+    else:
+        products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def list_products_by_category(request):
+    """
+    List products filtered by category.
+    """
+    category_name = request.query_params.get('category', None)
+    if category_name:
+        try:
+            category = Category.objects.get(name=category_name)
+            products = Product.objects.filter(category=category)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def list_products_by_availability(request):
+    """
+    List products filtered by availability.
+    """
+    availability = request.query_params.get('is_available', None)
+    if availability is not None:
+        is_available = availability.lower() in ['true', '1', 'yes']
+        products = Product.objects.filter(is_available=is_available)
+    else:
+        products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
