@@ -1,0 +1,29 @@
+# tests/test_routes.py
+from django.test import TestCase
+from django.urls import reverse
+from myapp.models import Product  # Replace `myapp` with your actual app name
+from .factories import ProductFactory
+
+class ProductRouteTest(TestCase):
+    def setUp(self):
+        # Create products with different availability statuses
+        self.available_product = ProductFactory(name="Available Product", is_available=True)
+        self.unavailable_product = ProductFactory(name="Unavailable Product", is_available=False)
+
+    def test_list_products_by_availability_route(self):
+        # Define the URL for the product list route with a query parameter to filter by availability
+        url = reverse('product-list') + '?is_available=true'
+        
+        # Make a GET request to retrieve products that are available
+        response = self.client.get(url)
+        
+        # Verify the response status code
+        self.assertEqual(response.status_code, 200)
+        
+        # Verify that the response data includes only available products
+        response_data = response.json()
+        self.assertEqual(len(response_data), 1)
+        
+        # Check that the product in the response is marked as available
+        self.assertEqual(response_data[0]["name"], "Available Product")
+        self.assertTrue(response_data[0]["is_available"])
