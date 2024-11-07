@@ -1,0 +1,24 @@
+# tests/test_routes.py
+from django.test import TestCase
+from django.urls import reverse
+from myapp.models import Product  # Replace `myapp` with your actual app name
+from .factories import ProductFactory
+
+class ProductRouteTest(TestCase):
+    def setUp(self):
+        # Create a product instance using the factory
+        self.product = ProductFactory(name="Sample Product", price=29.99)
+    
+    def test_read_product_route(self):
+        # Get the URL for the product detail route (replace 'product-detail' with your route name)
+        url = reverse('product-detail', args=[self.product.id])
+        
+        # Make a GET request to the URL
+        response = self.client.get(url)
+        
+        # Verify the response status code
+        self.assertEqual(response.status_code, 200)
+        
+        # Verify that the response data includes the correct product details
+        self.assertEqual(response.json().get("name"), "Sample Product")
+        self.assertEqual(response.json().get("price"), 29.99)
