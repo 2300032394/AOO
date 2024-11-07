@@ -1,0 +1,15 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Updating a product by its ID
+    Given there is a product with ID "1" in the database
+    When I update the product with ID "1" with the following details:
+      | name       | Laptop Pro |
+      | category   | Electronics |
+      | price      | 1200.00 |
+      | is_available | true |
+    Then the response status code should be 200
+    And the product name should be "Laptop Pro"
+    And the product category should be "Electronics"
+    And the product price should be "1200.00"
+    And the product availability should be "true"
