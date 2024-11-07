@@ -1,0 +1,30 @@
+# tests/test_routes.py
+from django.test import TestCase
+from django.urls import reverse
+from myapp.models import Product  # Replace `myapp` with your actual app name
+from .factories import ProductFactory
+
+class ProductRouteTest(TestCase):
+    def setUp(self):
+        # Create multiple product instances with different names
+        self.product1 = ProductFactory(name="Unique Product", price=19.99)
+        self.product2 = ProductFactory(name="Unique Product", price=29.99)
+        self.product3 = ProductFactory(name="Different Product", price=39.99)
+
+    def test_list_products_by_name_route(self):
+        # Define the URL for the product list route with a query parameter for filtering by name
+        url = reverse('product-list') + '?name=Unique Product'
+        
+        # Make a GET request to retrieve products with the specified name
+        response = self.client.get(url)
+        
+        # Verify the response status code
+        self.assertEqual(response.status_code, 200)
+        
+        # Verify that the response data includes only products with the name "Unique Product"
+        response_data = response.json()
+        self.assertEqual(len(response_data), 2)
+        
+        # Check that all returned products have the name "Unique Product"
+        for product in response_data:
+            self.assertEqual(product["name"], "Unique Product")
