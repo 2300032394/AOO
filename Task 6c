@@ -1,0 +1,8 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Deleting a product by its ID
+    Given there is a product with ID "1" in the database
+    When I request to delete the product with ID "1"
+    Then the response status code should be 204
+    And the product with ID "1" should no longer exist in the database
