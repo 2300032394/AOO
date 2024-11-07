@@ -1,0 +1,36 @@
+# tests/test_routes.py
+from django.test import TestCase
+from django.urls import reverse
+from myapp.models import Product, Category  # Replace `myapp` with your actual app name
+from .factories import ProductFactory, CategoryFactory
+
+class ProductRouteTest(TestCase):
+    def setUp(self):
+        # Create category instances
+        self.category_electronics = CategoryFactory(name="Electronics")
+        self.category_clothing = CategoryFactory(name="Clothing")
+        
+        # Create products in different categories
+        self.product1 = ProductFactory(name="Laptop", category=self.category_electronics)
+        self.product2 = ProductFactory(name="Smartphone", category=self.category_electronics)
+        self.product3 = ProductFactory(name="T-Shirt", category=self.category_clothing)
+
+    def test_list_products_by_category_route(self):
+        # Define the URL for the product list route with a query parameter to filter by category
+        url = reverse('product-list') + '?category=Electronics'
+        
+        # Make a GET request to retrieve products in the "Electronics" category
+        response = self.client.get(url)
+        
+        # Verify the response status code
+        self.assertEqual(response.status_code, 200)
+        
+        # Verify that the response data includes only products in the "Electronics" category
+        response_data = response.json()
+        self.assertEqual(len(response_data), 2)
+        
+        # Check that all returned products belong to the "Electronics" category
+        product_names = [product["name"] for product in response_data]
+        self.assertIn("Laptop", product_names)
+        self.assertIn("Smartphone", product_names)
+        self.assertNotIn("T-Shirt", product_names)
