@@ -1,0 +1,23 @@
+# tests/test_models.py
+from django.test import TestCase
+from myapp.models import Product  # Replace `myapp` with your actual app name
+from .factories import ProductFactory
+
+class ProductModelTest(TestCase):
+    def setUp(self):
+        # Set up products with different availability statuses
+        self.available_product = ProductFactory(name="Available Product", is_available=True)
+        self.unavailable_product = ProductFactory(name="Unavailable Product", is_available=False)
+
+    def test_find_products_by_availability(self):
+        # Retrieve all available products
+        available_products = Product.objects.filter(is_available=True)
+
+        # Verify that only the available products are retrieved
+        self.assertEqual(available_products.count(), 1)
+        self.assertEqual(available_products[0].name, "Available Product")
+
+        # Ensure that unavailable products are not included
+        unavailable_products = Product.objects.filter(is_available=False)
+        self.assertEqual(unavailable_products.count(), 1)
+        self.assertEqual(unavailable_products[0].name, "Unavailable Product")
