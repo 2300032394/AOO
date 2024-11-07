@@ -1,0 +1,12 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Searching for products by category
+    Given there are products in the "Electronics" category
+    And there are products in the "Clothing" category
+    When I request to list all products in the "Electronics" category
+    Then the response status code should be 200
+    And the response should contain only products from the "Electronics" category
+    And the list should include the product with name "Laptop"
+    And the list should include the product with name "Smartphone"
+    And the list should not include any products from the "Clothing" category
