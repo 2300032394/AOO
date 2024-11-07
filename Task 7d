@@ -1,0 +1,21 @@
+# features/steps/web_steps.py
+from behave import given, when, then
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+@given('I am on the homepage')
+def step_impl(context):
+    # Open the browser and navigate to the homepage
+    context.driver = webdriver.Chrome()
+    context.driver.get('http://yourwebsite.com')
+
+@when('I perform an action that triggers a message')
+def step_impl(context):
+    # Perform an action (e.g., click a button) that triggers a message
+    context.driver.find_element(By.NAME, 'trigger_button').click()
+
+@then('I should see the message "{message}"')
+def step_impl(context, message):
+    # Verify that the expected message appears on the page
+    page_source = context.driver.page_source
+    assert message in page_source, f"Expected message '{message}' not found on the page"
