@@ -1,0 +1,11 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Reading a product by its ID
+    Given there are products in the database
+    When I request to read the product with ID "1"
+    Then the response status code should be 200
+    And the product name should be "Laptop"
+    And the product category should be "Electronics"
+    And the product price should be "1000.00"
+    And the product availability should be "true"
