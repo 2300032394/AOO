@@ -1,0 +1,22 @@
+# features/steps/load_steps.py
+from pytest_bdd import given
+from myapp.models import Product, Category  # Replace `myapp` with your actual app name
+from myapp.factories import ProductFactory, CategoryFactory  # Replace with appropriate factories
+
+@given('there are products in the database')
+def load_background_products():
+    """
+    Loads background data (products) into the database.
+    """
+    # Create sample categories
+    electronics = CategoryFactory(name="Electronics")
+    clothing = CategoryFactory(name="Clothing")
+
+    # Create sample products
+    ProductFactory(name="Laptop", category=electronics, price=1000.00, is_available=True)
+    ProductFactory(name="Smartphone", category=electronics, price=700.00, is_available=True)
+    ProductFactory(name="T-Shirt", category=clothing, price=20.00, is_available=False)
+    ProductFactory(name="Jeans", category=clothing, price=40.00, is_available=True)
+    
+    # Optionally, you can print to confirm products are loaded
+    print("Background products loaded into the database.")
