@@ -1,0 +1,23 @@
+# features/steps/web_steps.py
+from behave import given, when, then
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+@given('I am on the product page')
+def step_impl(context):
+    # Open the browser and navigate to the product page
+    context.driver = webdriver.Chrome()
+    context.driver.get('http://yourwebsite.com/product_page')
+
+@when('I click the "{button_name}" button')
+def step_impl(context, button_name):
+    # Find the button by its name and click it
+    button = context.driver.find_element(By.NAME, button_name)
+    button.click()
+
+@then('I should see the "{message}" message')
+def step_impl(context, message):
+    # Verify that the expected message appears after the button click
+    alert = context.driver.switch_to.alert
+    assert message in alert.text
+    alert.accept()
