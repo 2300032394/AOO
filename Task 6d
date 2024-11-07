@@ -1,0 +1,11 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Listing all products
+    Given there are products in the database
+    When I request to list all products
+    Then the response status code should be 200
+    And the response should contain a list of products
+    And the list should include the product with name "Laptop"
+    And the list should include the product with name "Smartphone"
+    And the list should include the product with name "T-Shirt"
