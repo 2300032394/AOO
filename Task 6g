@@ -1,0 +1,10 @@
+# features/products.feature
+Feature: Product Management
+
+  Scenario: Searching for a product by name
+    Given there are products with the name "Laptop", "Smartphone", and "T-Shirt" in the database
+    When I request to search for a product by the name "Laptop"
+    Then the response status code should be 200
+    And the response should contain the product with name "Laptop"
+    And the response should not contain the product with name "Smartphone"
+    And the response should not contain the product with name "T-Shirt"
