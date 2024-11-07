@@ -1,0 +1,20 @@
+# tests/factories.py
+import factory
+from faker import Faker
+from myapp.models import Product  # Replace `myapp` with your actual app name
+
+fake = Faker()
+
+class ProductFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Product
+
+    name = factory.LazyAttribute(lambda _: fake.word())
+    description = factory.LazyAttribute(lambda _: fake.text(max_nb_chars=100))
+    price = factory.LazyAttribute(lambda _: round(fake.pydecimal(left_digits=4, right_digits=2, positive=True), 2))
+    stock = factory.LazyAttribute(lambda _: fake.random_int(min=1, max=100))
+    created_at = factory.LazyAttribute(lambda _: fake.date_time_this_year())
+    updated_at = factory.LazyAttribute(lambda _: fake.date_time_this_year())
+
+# Example of generating a fake product instance for testing
+# product = ProductFactory()
