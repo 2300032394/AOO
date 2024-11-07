@@ -1,0 +1,20 @@
+# features/steps/web_steps.py
+from behave import given, when, then
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+@given('I am on the homepage')
+def step_impl(context):
+    # Open the browser and navigate to the homepage
+    context.driver = webdriver.Chrome()
+    context.driver.get('http://yourwebsite.com')
+
+@when('I look for the text "{text}"')
+def step_impl(context, text):
+    # Check if the text is present anywhere on the page
+    context.text_found = text in context.driver.page_source
+
+@then('the text "{text}" should not be present on the page')
+def step_impl(context, text):
+    # Verify that the specific text is NOT found on the page
+    assert context.text_found is False, f"Expected text '{text}' not to be present on the page, but it was found"
